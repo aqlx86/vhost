@@ -31,8 +31,7 @@ template = """<VirtualHost *:80>
 	<Directory {__doc_root__}/>
 		Options Indexes FollowSymLinks MultiViews
 		AllowOverride None
-		Order allow,deny
-		allow from all
+		Require all denied
 	</Directory>
 	ErrorLog ${{APACHE_LOG_DIR}}/{__server_name__}-error.log
 	LogLevel warn
@@ -50,7 +49,7 @@ server_name = raw_input('> server name [ex. testsite.dev] - ')
 doc_root = raw_input('> document root [ex. /vaw/www/html/] - ')
 
 # check vhost if existing
-if os.path.isfile(vhost_available + server_name):
+if os.path.isfile(vhost_available + server_name + '.conf'):
 	sys.exit('> abort!! virtual host name exists.')
 
 # check doc root
@@ -58,7 +57,7 @@ if not os.path.exists(doc_root):
 	os.makedirs(doc_root)
 
 # write to file
-with open(vhost_available + server_name, 'w') as n:
+with open(vhost_available + server_name + '.conf', 'w') as n:
 	# replate template variables
 	n.write(template.format(**{'__server_name__': server_name, '__doc_root__': doc_root}))
 
