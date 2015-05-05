@@ -13,7 +13,7 @@ apache_dir = '/etc/apache2/'
 # available vhost
 vhost_available = apache_dir + 'sites-available/'
 
-# enabled vhost 
+# enabled vhost
 vhost_enabled = apache_dir + 'sites-enabled/'
 
 # host file
@@ -30,13 +30,13 @@ template = """<VirtualHost *:80>
 	</Directory>
 	<Directory {__doc_root__}/>
 		Options Indexes FollowSymLinks MultiViews
-		AllowOverride None
+		AllowOverride all
 		Require all granted
 	</Directory>
 	ErrorLog ${{APACHE_LOG_DIR}}/{__server_name__}-error.log
 	LogLevel warn
 	CustomLog ${{APACHE_LOG_DIR}}/{__server_name__}-access.log combined
-</VirtualHost>""" 
+</VirtualHost>"""
 
 # check if root.
 if getpass.getuser() != 'root':
@@ -48,8 +48,11 @@ server_name = raw_input('> server name [ex. testsite.dev] - ')
 # get document root
 doc_root = raw_input('> document root [ex. /vaw/www/html/] - ')
 
+# construct conf file
+conf_file = vhost_available + server_name + '.conf';
+
 # check vhost if existing
-if os.path.isfile(vhost_available + server_name + '.conf'):
+if os.path.isfile(conf_file):
 	sys.exit('> abort!! virtual host name exists.')
 
 # check doc root
@@ -57,7 +60,7 @@ if not os.path.exists(doc_root):
 	os.makedirs(doc_root)
 
 # write to file
-with open(vhost_available + server_name + '.conf', 'w') as n:
+with open(conf_file, 'w') as n:
 	# replate template variables
 	n.write(template.format(**{'__server_name__': server_name, '__doc_root__': doc_root}))
 
@@ -70,5 +73,7 @@ with open(host_file, 'a') as h:
 
 # reload apache service
 #print '> restarting'
-#os.system('service apache2 reload')
+
+print '> created conf file: ' + conf_file
+print '> restart apache with: service apache2 reload'
 print '> done.'
