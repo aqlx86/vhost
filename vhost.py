@@ -30,7 +30,7 @@ template = """<VirtualHost *:80>
 	</Directory>
 	<Directory {__doc_root__}/>
 		Options Indexes FollowSymLinks MultiViews
-		AllowOverride all
+		AllowOverride All
 		Require all granted
 	</Directory>
 	ErrorLog ${{APACHE_LOG_DIR}}/{__server_name__}-error.log
