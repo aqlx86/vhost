@@ -31,7 +31,7 @@ template = """<VirtualHost *:80>
 	<Directory {__doc_root__}/>
 		Options Indexes FollowSymLinks MultiViews
 		AllowOverride None
-		Require all denied
+		Require all granted
 	</Directory>
 	ErrorLog ${{APACHE_LOG_DIR}}/{__server_name__}-error.log
 	LogLevel warn
